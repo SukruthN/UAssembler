@@ -131,11 +131,13 @@ map<string,int>symtab;//symbol table
 map<string,int>littab;//literal table
 int countd=0;//keeping instruction count in the .data segment
 int countt=0; //keeping instruction count in the .text segment
-
+int k=0;
+string dir1;
 char check(char input[])
 {    //no unnecessary new lines are allowed
      //comments must start from the beginning of the line
 	//.align should not be used
+	//start from the beginig of the line
 	int i,j;
 	if (input[0]=='#')
 	{
@@ -166,7 +168,7 @@ void parse_file(FILE *fp,int n)
 {  //pass 1
 	// data segment before text segment
 	int i,j;
-	int k=0;
+	
 	string dir;
 	if(n==1)
 	{     
@@ -174,60 +176,90 @@ void parse_file(FILE *fp,int n)
 		if(ch==EOF)
 			return;
 		else
-		{
-          char input[128];
+		{  string copy;
+			copy="\0";
+          char input[10000];
           input[0]='\0';
           fscanf(fp,"%[^\n]",input);
+
           char type=check(input);
+
           for(i=0;input[i];i++)
-          	cout<<input[i];
-          cout<<endl;
-          cout<<type<<endl;
+          	{
+          		copy+=input[i];
+          //cout<<input[i];
+          	}
+        //  cout<<endl;
+        // cout<<type<<endl;
           
-          if (type=='d')
+         if (type=='d')
           {
           	
-          	dir='\0';
+          	
           	if(k<2)
           {	
-          	for(i=0;input[i];i++)
-          	{
-          		dir+=input[i];
-          	}
-          	dir+='\0';
+          	dir="\0";
+          	dir=copy;
+          	//dir+='\0';
           }
           k++;
-          cout<<dir<<endl;
-           cout<<k<<endl;
+          if(dir!="\0")
+          	dir1=dir;
+        // cout<<dir1<<endl;
+          // cout<<k<<endl;
           }
-          /*else if (type=='l')
+          else if (type=='l')
           {
           	  string label;
-          	  label='\0';
+          	  label="\0";
+
           	  for(i=0;input[i]!=':';i++)
           	{
           		label+=input[i];
           	}
+
             label+='\0';
-          	if(dir==".text")
+
+          	if(dir1==".text")
           	{
           		symtab.insert({label,countt});
           	}
-          	else
+
+
+          	else if(dir1==".data")
           	{
           		littab.insert({label,countd});
           	}
+
+
           }
 
-          if(dir==".text")
+          if(dir1==".text")
+          	{
+          		if(type=='l'||type=='i')
           countt+=4;
-          else 
-          countd+=4;*/
+              }
+          else if(dir1==".data") 
+          	{
+          		if(type=='l'||type=='i')
+          countd+=4;
+            }
+     // cout<<"countt="<<countt<<' '<<"countd="<<countd<<endl;
 
         parse_file(fp,1);
 
 }
       
+	}
+
+
+	else
+	{
+
+            //pass 2
+
+
+
 	}
 }
 
