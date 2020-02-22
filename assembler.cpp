@@ -349,7 +349,7 @@ int i,j;
 
     	//do for other XO instructions
     }
-
+      //do for other instruction types
 }
 
 void transalate_pseudo(string ins,string act_ins,char input[],int s)
