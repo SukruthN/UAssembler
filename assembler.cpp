@@ -6,6 +6,7 @@ map<string,string>register_map;
 map<string,string>pseudo_instructions;
 FILE *In;
 FILE *Out;
+
 struct X
 {
 	string po;
@@ -264,6 +265,64 @@ int i,j;
     		result.po="011111";
     		result.xo="0000011100";
     		result.rc="0";
+    	}
+    	
+    	else if(ins=="extsw")
+    	{
+    		result.po="011111";
+    		result.xo="1111011010";
+    		result.rc="0";
+    	}
+
+    	else if(ins=="nand")
+    	{
+    		result.po="011111";
+    		result.xo="0111011100";
+    		result.rc="0";
+    	}
+ 
+    	else if(ins=="or")
+    	{
+    		result.po="011111";
+    		result.xo="0110111100";
+    		result.rc="0";
+    	}
+   
+    	else if(ins=="xor")
+    	{
+    		result.po="011111";
+    		result.xo="0100111100";
+    		result.rc="0";
+    	}
+
+    	else if(ins=="sld")
+    	{
+    		result.po="011111";
+    		result.xo="0000011011";
+    		result.rc="0";
+    	}
+
+    	else if(ins=="srd")
+    	{
+    		result.po="011111";
+    		result.xo="1000011011";
+    		result.rc="0";
+    	}
+
+    	else if(ins=="srad")
+    	{
+    		result.po="011111";
+    		result.xo="1100011010";
+    		result.rc="0";
+    	}
+
+    	else if(ins=="cmp")
+    	{
+    		result.po="011111";
+    		result.xo="0000000000";
+    		result.rc="0";
+    	}
+
             i=eliminate_spaces(input,s);
             string t="\0";
             t+=input[i];
@@ -297,10 +356,6 @@ int i,j;
            string fans=result.po+result.rs+result.ra+result.rb+result.xo+result.rc;
           // cout<<fans<<endl;//result to be added to output file
 
-
-    	}
-
-    	//similarly do for extsw,nand,or,xor,sld,srd,srad,cmp
     }
 
     else if (format=="XO")
@@ -309,9 +364,19 @@ int i,j;
     	if(ins=="add")
     	{
     		result.po="011111";
-    		result.xo="100001010";
+ 			result.oe="0";
     		result.rc="0";
+    		result.xo="100001010";
+    	}
+
+    	else if(ins=="subf")
+    	{
+    		result.po="011111";
     		result.oe="0";
+    		result.rc="0";
+    		result.xo="000101000";
+    	}
+
             i=eliminate_spaces(input,s);
             string t="\0";
             t+=input[i];
@@ -345,11 +410,358 @@ int i,j;
            string fans1=result.po+result.rt+result.ra+result.rb+result.oe+result.xo+result.rc;
            cout<<fans1<<endl;//result to be added to output file
 
+    }
+
+    else if(format == "XS")
+    {
+    	struct XS result;
+
+    	if(ins == "sradi")
+    	{
+    		result.po="011111";
+    		result.xo="110011101";
+    		result.sh1="0";
+    		result.rc="0";
     	}
 
-    	//do for other XO instructions
+    		i=eliminate_spaces(input,s);
+            string t="\0";
+            t+=input[i];
+            //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.ra=register_map[t];
+            	//cout<<result.rt<<endl;
+            }
+            i++;
+            j=eliminate_spaces(input,i);
+            t="\0";
+            t+=input[j];
+            //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.rs=register_map[t];
+            	//cout<<result.ra<<endl;
+            }
+            j++;
+            i=eliminate_spaces(input,j);
+            t="\0";
+            t+=input[i];
+           //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.sh=register_map[t];
+            	//cout<<result.rb<<endl;
+            }
+            i++;
+            string fans2 = result.po + result.rs + result.ra + result.sh + result.xo + result.sh1 + result.rc;
+            cout << fans2 << endl;
+
+    }
+
+    else if(format == "D")
+    {
+    	struct D result;
+
+    	if(ins == "addi")
+    	{
+    		result.po = "001110";
+    	}
+
+    	else if(ins == "addis")
+    	{
+    		result.po = "001111";
+    	}
+
+    	else if(ins == "andi")
+    	{
+    		result.po = "011100";
+    	}
+
+    	else if(ins == "ori")
+    	{
+    		result.po = "011000";
+    	}
+
+    	else if(ins == "lwz")
+    	{
+    		result.po = "100000";
+    	}
+
+    	else if(ins == "stw")
+    	{
+    		result.po = "100100";
+    	}
+
+    	else if(ins == "stwu")
+    	{
+    		result.po = "100101";
+    	}
+
+    	else if(ins == "lhz")
+    	{
+    		result.po = "101000";
+    	}
+
+    	else if(ins == "lha")
+    	{
+    		result.po = "101010";
+    	}
+
+    	else if(ins == "sth")
+    	{
+    		result.po = "101100";
+    	}
+
+    	else if(ins == "lbz")
+    	{
+    		result.po = "100010";
+    	}
+
+    	else if(ins == "stb")
+    	{
+    		result.po = "100110";
+    	}
+
+    	else if(ins == "cmpi")
+    	{
+    		result.po = "001011";
+    	}
+
+    		i=eliminate_spaces(input,s);
+            string t="\0";
+            t+=input[i];
+            //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.rt=register_map[t];
+            	//cout<<result.rt<<endl;
+            }
+            i++;
+            j=eliminate_spaces(input,i);
+            t="\0";
+            t+=input[j];
+            //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.ra=register_map[t];
+            	//cout<<result.ra<<endl;
+            }
+            j++;
+            i=eliminate_spaces(input,j);
+            t="\0";
+            t+=input[i];
+           //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.si=register_map[t];
+            	//cout<<result.rb<<endl;
+            }
+            i++;
+            string fans3 = result.po + result.rt + result.ra + result.si;
+            cout << fans3 << endl;
+
+    }
+
+    else if(format == "M")
+    {
+    	struct M result;
+    	if(ins == "rlwinm")
+    	{
+    		result.po = "010101";
+    		result.rc = "0";
+    	}
+
+    		i=eliminate_spaces(input,s);
+            string t="\0";
+            t+=input[i];
+            //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.rs=register_map[t];
+            	//cout<<result.rt<<endl;
+            }
+            i++;
+            j=eliminate_spaces(input,i);
+            t="\0";
+            t+=input[j];
+            //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.ra=register_map[t];
+            	//cout<<result.ra<<endl;
+            }
+            j++;
+            i=eliminate_spaces(input,j);
+            t="\0";
+            t+=input[i];
+           //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.sh=register_map[t];
+            	//cout<<result.rb<<endl;
+            }
+            i++;
+            j=eliminate_spaces(input,i);
+            t="\0";
+            t+=input[j];
+            //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.mb=register_map[t];
+            	//cout<<result.ra<<endl;
+            }
+            j++;
+            i=eliminate_spaces(input,j);
+            t="\0";
+            t+=input[i];
+           //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.me=register_map[t];
+            	//cout<<result.rb<<endl;
+            }
+            i++;
+    		//rs,ra,sh,mb,me
+    		string fans4 = result.po + result.rs + result.ra + result.sh + result.mb + result.me;
+    		cout << fans4 << endl;
+    }
+
+    else if(format == "B")
+    {
+    	struct B result;
+    	//po,bo,bi,bd,aa,lk
+    	if(ins == "bc")
+    	{
+    		result.po = "010011";
+    		result.aa = "0";
+    		result.lk = "0";
+    	}
+
+    	else if(ins == "bca")
+    	{
+    		result.po = "010011";
+    		result.aa = "1";
+    		result.lk = "0";
+    	}
+
+    		i=eliminate_spaces(input,s);
+            string t="\0";
+            t+=input[i];
+            //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.bo=register_map[t];
+            	//cout<<result.rt<<endl;
+            }
+            i++;
+            j=eliminate_spaces(input,i);
+            t="\0";
+            t+=input[j];
+            //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.bi=register_map[t];
+            	//cout<<result.ra<<endl;
+            }
+            j++;
+            i=eliminate_spaces(input,j);
+            t="\0";
+            t+=input[i];
+           //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.bd=register_map[t];
+            	//cout<<result.rb<<endl;
+            }
+            i++;
+            string fans5 = result.po + result.bo + result.bi + result.bd + result.aa + result.lk;
+            cout << fans5 << endl;
+    }
+
+    else if(format == "DS")
+    {
+    	//po,rt,ra,ds,xo
+    	struct DS result;
+
+    	if(ins == "ld")
+    	{
+    		result.po = "111010";
+    		result.xo = "0";
+    	}
+
+    	else if(ins == "std")
+    	{
+    		result.po = "111110";
+    		result.xo = "0";
+    	}
+    		i=eliminate_spaces(input,s);
+            string t="\0";
+            t+=input[i];
+            //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.rt=register_map[t];
+            	//cout<<result.rt<<endl;
+            }
+            i++;
+            j=eliminate_spaces(input,i);
+            t="\0";
+            t+=input[j];
+            //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.ds=register_map[t];
+            	//cout<<result.ra<<endl;
+            }
+            j++;
+            i=eliminate_spaces(input,j);
+            t="\0";
+            t+=input[i];
+           //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.ra=register_map[t];
+            	//cout<<result.rb<<endl;
+            }
+            i++;
+            string fans6 = result.po + result.rt + result.ra + result.ds + result.xo;
+            cout << fans6 << endl;
+    }
+
+    else if(format == "I")
+    {
+    	struct I result;
+    	//po, li, aa ,lk
+    	if(ins == "b")
+    	{
+    		result.po = "010010";
+    		result.aa = "";
+    		result.lk = "0";
+    	}
+
+    	else if(ins == "bl")
+    	{
+    		result.po = "010010";
+    		result.aa = "0";
+    		result.lk = "1";
+    	}
+
+    		i=eliminate_spaces(input,s);
+            string t="\0";
+            t+=input[i];
+            //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.li=register_map[t];
+            	//cout<<result.rt<<endl;
+            }
+            i++;
+
+            string fans7 = result.po + result.li + result.aa + result.lk;
     }
       //do for other instruction types
+    	// X, XO, XS, D, M, B, DS, I
 }
 
 void transalate_pseudo(string ins,string act_ins,char input[],int s)
