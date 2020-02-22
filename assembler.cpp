@@ -469,7 +469,7 @@ int main(int argc, char const *argv[])
 		passNumber = 2;
 		parse_file( fp1,passNumber);
 
-		// Close files
+		// Close files after converitng to binary
 		fclose(In);
 		fclose(Out);
 	}
