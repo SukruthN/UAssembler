@@ -247,7 +247,7 @@ int eliminate_spaces(char input[],int s)
 	int i;
 	for(i=s;input[i];i++)
 	{
-		if(input[i]!=' ')
+		if(input[i]!=' ' && input[i]!=',')
 			return i;
 	}
 }
@@ -255,6 +255,100 @@ int eliminate_spaces(char input[],int s)
 
 void transalate(string ins,string format,char input[],int s)
 {
+int i,j;
+    if(format=="X")
+    {
+    	struct X result;
+    	if(ins=="and")
+    	{
+    		result.po="011111";
+    		result.xo="0000011100";
+    		result.rc="0";
+            i=eliminate_spaces(input,s);
+            string t="\0";
+            t+=input[i];
+           // cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.ra=register_map[t];
+            	//cout<<result.ra<<endl;
+            }
+            i++;
+            j=eliminate_spaces(input,i);
+            t="\0";
+            t+=input[j];
+           // cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.rs=register_map[t];
+            	//cout<<result.rs<<endl;
+            }
+            j++;
+            i=eliminate_spaces(input,j);
+            t="\0";
+            t+=input[i];
+           // cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.rb=register_map[t];
+            	//cout<<result.rb<<endl;
+            }
+            i++;
+           string fans=result.po+result.rs+result.ra+result.rb+result.xo+result.rc;
+          // cout<<fans<<endl;//result to be added to output file
+
+
+    	}
+
+    	//similarly do for extsw,nand,or,xor,sld,srd,srad,cmp
+    }
+
+    else if (format=="XO")
+    {
+    	struct XO result;
+    	if(ins=="add")
+    	{
+    		result.po="011111";
+    		result.xo="100001010";
+    		result.rc="0";
+    		result.oe="0";
+            i=eliminate_spaces(input,s);
+            string t="\0";
+            t+=input[i];
+            //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.rt=register_map[t];
+            	//cout<<result.rt<<endl;
+            }
+            i++;
+            j=eliminate_spaces(input,i);
+            t="\0";
+            t+=input[j];
+            //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.ra=register_map[t];
+            	//cout<<result.ra<<endl;
+            }
+            j++;
+            i=eliminate_spaces(input,j);
+            t="\0";
+            t+=input[i];
+           //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.rb=register_map[t];
+            	//cout<<result.rb<<endl;
+            }
+            i++;
+           string fans1=result.po+result.rt+result.ra+result.rb+result.oe+result.xo+result.rc;
+           cout<<fans1<<endl;//result to be added to output file
+
+    	}
+
+    	//do for other XO instructions
+    }
 
 }
 
@@ -469,7 +563,7 @@ int main(int argc, char const *argv[])
 		passNumber = 2;
 		parse_file( fp1,passNumber);
 
-		// Close files after converitng to binary
+		// Close files
 		fclose(In);
 		fclose(Out);
 	}
