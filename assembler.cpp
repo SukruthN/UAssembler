@@ -6,7 +6,7 @@ map<string,string>register_map;
 map<string,string>pseudo_instructions;
 FILE *In;
 FILE *Out;
-
+int z=0;// extra global variable 
 struct X
 {
 	string po;
@@ -248,11 +248,123 @@ int eliminate_spaces(char input[],int s)
 	int i;
 	for(i=s;input[i];i++)
 	{
-		if(input[i]!=' ' && input[i]!=',')
+		if(input[i]!=' ' && input[i]!=',' && input[i]!='(')
 			return i;
 	}
 }
 
+string get_string(char input[],string t,int s)
+{
+	int i;
+	for(i=s;input[i];i++)
+	{
+		if(input[i]!=' ' && input[i]!=','&& input[i]!='(' && input[i]!=')')
+			t+=input[i];
+		else
+			break;
+	}
+	z=i;
+	return t;
+
+}
+
+string convert_li(int n)
+{
+	string res;
+	res="\0";
+	
+	 for (int i = 23; i >= 0; i--) 
+	 { 
+        int k = n >> i; 
+        if (k & 1) 
+            res+="1";
+        else
+            res+="0";
+    } 
+   // cout<<res<<endl;
+    return res;
+}
+string convert_i_li(string d)
+{
+	string res;
+	res="\0";
+	int n=stoi(d);
+	 for (int i = 23; i >= 0; i--) 
+	 { 
+        int k = n >> i; 
+        if (k & 1) 
+            res+="1";
+        else
+            res+="0";
+    } 
+   // cout<<res<<endl;
+    return res;
+}
+string convert_d_ui(string d)
+{
+	string res;
+	res="\0";
+	int n=stoi(d);
+	 for (int i = 15; i >= 0; i--) 
+	 { 
+        int k = n >> i; 
+        if (k & 1) 
+            res+="1";
+        else
+            res+="0";
+    } 
+   // cout<<res<<endl;
+    return res;
+}
+
+string convert_d_si(string d)
+{
+	string res;
+	res="\0";
+	int n=stoi(d);
+	 for (int i = 15; i >= 0; i--) 
+	 { 
+        int k = n >> i; 
+        if (k & 1) 
+            res+="1";
+        else
+            res+="0";
+    } 
+   // cout<<res<<endl;
+    return res;
+}
+
+string convert_ds(string ds)
+{
+	string res;
+	res="\0";
+	int n=stoi(ds);
+	 for (int i = 13; i >= 0; i--) 
+	 { 
+        int k = n >> i; 
+        if (k & 1) 
+            res+="1";
+        else
+            res+="0";
+    } 
+   // cout<<res<<endl;
+    return res;
+}
+string convert_dsi(int n)
+{
+	string res;
+	res="\0";
+	 for (int i = 13; i >= 0; i--) 
+	 { 
+        int k = n >> i; 
+        if (k & 1) 
+            res+="1";
+        else
+            res+="0";
+    } 
+   // cout<<res<<endl;
+    return res;
+}
 
 void transalate(string ins,string format,char input[],int s)
 {
@@ -260,6 +372,7 @@ int i,j;
     if(format=="X")
     {
     	struct X result;
+    	result.rb="00000";
     	if(ins=="and")
     	{
     		result.po="011111";
@@ -316,26 +429,27 @@ int i,j;
     		result.rc="0";
     	}
 
-    	else if(ins=="cmp")
-    	{
-    		result.po="011111";
-    		result.xo="0000000000";
-    		result.rc="0";
-    	}
+    	
 
-            i=eliminate_spaces(input,s);
+           z=0;
+    		i=eliminate_spaces(input,s);
+    		z=i;
             string t="\0";
-            t+=input[i];
-           // cout<<t<<endl;
+            t=get_string(input,t,z);
+            i=z;
+            //cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
             	result.ra=register_map[t];
             	//cout<<result.ra<<endl;
             }
             i++;
+            z=0;
             j=eliminate_spaces(input,i);
+            z=j;
             t="\0";
-            t+=input[j];
+            t=get_string(input,t,z);
+            j=z;
            // cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
@@ -343,18 +457,77 @@ int i,j;
             	//cout<<result.rs<<endl;
             }
             j++;
-            i=eliminate_spaces(input,j);
-            t="\0";
-            t+=input[i];
+            z=0;
+    		i=eliminate_spaces(input,j);
+    		z=i;
+             t="\0";
+            t=get_string(input,t,z);
+            i=z;
            // cout<<t<<endl;
+            if(t!="extsw")
+        {        
             if(register_map.find(t)!=register_map.end())
             {
             	result.rb=register_map[t];
             	//cout<<result.rb<<endl;
             }
+        }
             i++;
+
+            if(ins=="cmp")
+    	{
+    		result.po="011111";
+    		result.xo="0000000000";
+    		result.rc="0";
+    		z=0;
+    		i=eliminate_spaces(input,s);
+    		z=i;
+            string t="\0";
+            t=get_string(input,t,z);
+            i=z;
+          // cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.rs=register_map[t];
+            	//cout<<result.ra<<endl;
+            }
+            i=eliminate_spaces(input,i);
+            z=i;
+            t=get_string(input,t,z);
+            i=z;
+            i++;
+            z=0;
+            j=eliminate_spaces(input,i);
+            z=j;
+            t="\0";
+            t=get_string(input,t,z);
+            j=z;
+           //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.ra=register_map[t];
+            	//cout<<result.rs<<endl;
+            }
+            j++;
+             z=0;
+    		i=eliminate_spaces(input,j);
+    		z=i;
+             t="\0";
+            t=get_string(input,t,z);
+            i=z;
+           // cout<<t<<endl;
+            
+             
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.rb=register_map[t];
+            	//cout<<result.rb<<endl;
+            }
+        
+            i++;
+    	}
            string fans=result.po+result.rs+result.ra+result.rb+result.xo+result.rc;
-          // cout<<fans<<endl;//result to be added to output file
+         // cout<<fans<<endl;//result to be added to output file
 
     }
 
@@ -377,19 +550,25 @@ int i,j;
     		result.xo="000101000";
     	}
 
-            i=eliminate_spaces(input,s);
+            z=0;
+    		i=eliminate_spaces(input,s);
+    		z=i;
             string t="\0";
-            t+=input[i];
-            //cout<<t<<endl;
+            t=get_string(input,t,z);
+            i=z;
+           // cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
             	result.rt=register_map[t];
             	//cout<<result.rt<<endl;
             }
             i++;
+            z=0;
             j=eliminate_spaces(input,i);
+            z=j;
             t="\0";
-            t+=input[j];
+            t=get_string(input,t,z);
+            j=z;
             //cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
@@ -397,10 +576,13 @@ int i,j;
             	//cout<<result.ra<<endl;
             }
             j++;
-            i=eliminate_spaces(input,j);
-            t="\0";
-            t+=input[i];
-           //cout<<t<<endl;
+            z=0;
+    		i=eliminate_spaces(input,j);
+    		z=i;
+             t="\0";
+            t=get_string(input,t,z);
+            i=z;
+          // cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
             	result.rb=register_map[t];
@@ -408,12 +590,12 @@ int i,j;
             }
             i++;
            string fans1=result.po+result.rt+result.ra+result.rb+result.oe+result.xo+result.rc;
-           cout<<fans1<<endl;//result to be added to output file
+           //cout<<fans1<<endl;//result to be added to output file
 
     }
 
     else if(format == "XS")
-    {
+    {    //doubt in format
     	struct XS result;
 
     	if(ins == "sradi")
@@ -424,9 +606,12 @@ int i,j;
     		result.rc="0";
     	}
 
+    		z=0;
     		i=eliminate_spaces(input,s);
+    		z=i;
             string t="\0";
-            t+=input[i];
+            t=get_string(input,t,z);
+            i=z;
             //cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
@@ -434,9 +619,12 @@ int i,j;
             	//cout<<result.rt<<endl;
             }
             i++;
+            z=0;
             j=eliminate_spaces(input,i);
+            z=j;
             t="\0";
-            t+=input[j];
+            t=get_string(input,t,z);
+            j=z;
             //cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
@@ -444,13 +632,16 @@ int i,j;
             	//cout<<result.ra<<endl;
             }
             j++;
-            i=eliminate_spaces(input,j);
-            t="\0";
-            t+=input[i];
+            z=0;
+    		i=eliminate_spaces(input,j);
+    		z=i;
+             t="\0";
+            t=get_string(input,t,z);
+            i=z;
            //cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
-            	result.sh=register_map[t];
+            	result.sh=register_map[t];//this is wrong
             	//cout<<result.rb<<endl;
             }
             i++;
@@ -523,41 +714,138 @@ int i,j;
     		result.po = "100110";
     	}
 
-    	else if(ins == "cmpi")
+    /*	else if(ins == "cmpi")
     	{
     		result.po = "001011";
-    	}
+    	}*/
+        if(ins=="addi" || ins=="addis")
+        {    	
 
+    		z=0;
     		i=eliminate_spaces(input,s);
+    		z=i;
             string t="\0";
-            t+=input[i];
-            //cout<<t<<endl;
+            t=get_string(input,t,z);
+            i=z;
+           // cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
             	result.rt=register_map[t];
             	//cout<<result.rt<<endl;
             }
             i++;
+            z=0;
             j=eliminate_spaces(input,i);
+            z=j;
             t="\0";
-            t+=input[j];
-            //cout<<t<<endl;
+             t=get_string(input,t,z);
+             j=z;
+           // cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
             	result.ra=register_map[t];
             	//cout<<result.ra<<endl;
             }
             j++;
+            z=0;
             i=eliminate_spaces(input,j);
+            z=i;
             t="\0";
-            t+=input[i];
+            t=get_string(input,t,z);
+            i=z;
            //cout<<t<<endl;
+            //convert to si
+            result.si=convert_d_si(t);
+            i++;
+
+        } 
+
+        else if(ins=="andi" || ins=="ori"||ins=="xori")
+        {    	
+
+    		z=0;
+    		i=eliminate_spaces(input,s);
+    		z=i;
+            string t="\0";
+            t=get_string(input,t,z);
+            i=z;
+            //cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
-            	result.si=register_map[t];
-            	//cout<<result.rb<<endl;
+            	result.ra=register_map[t];
+            	//cout<<result.rt<<endl;
             }
             i++;
+            z=0;
+            j=eliminate_spaces(input,i);
+            z=j;
+            t="\0";
+             t=get_string(input,t,z);
+             j=z;
+            //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.rt=register_map[t];
+            	//cout<<result.ra<<endl;
+            }
+            j++;
+            z=0;
+            i=eliminate_spaces(input,j);
+            z=i;
+            t="\0";
+            t=get_string(input,t,z);
+            i=z;
+           //cout<<t<<endl;
+            //convert to si
+
+            result.si=convert_d_ui(t);
+            i++;
+
+        }   
+
+
+        else
+        {    	
+
+    		z=0;
+    		i=eliminate_spaces(input,s);
+    		z=i;
+            string t="\0";
+            t=get_string(input,t,z);
+            i=z;
+           // cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.rt=register_map[t];
+            	//cout<<result.rt<<endl;
+            }
+            i++;
+            z=0;
+            j=eliminate_spaces(input,i);
+            z=j;
+            t="\0";
+             t=get_string(input,t,z);
+             j=z;
+            //cout<<t<<endl;
+           //convert to si
+             result.si=convert_d_si(t);
+            j++;
+            z=0;
+            i=eliminate_spaces(input,j);
+            z=i;
+            t="\0";
+            t=get_string(input,t,z);
+            i=z;
+           //cout<<t<<endl;
+             if(register_map.find(t)!=register_map.end())
+            {
+            	result.ra=register_map[t];
+            	//cout<<result.ra<<endl;
+            }
+            
+            i++;
+
+        } 
             string fans3 = result.po + result.rt + result.ra + result.si;
             cout << fans3 << endl;
 
@@ -572,29 +860,38 @@ int i,j;
     		result.rc = "0";
     	}
 
+    		z=0;
     		i=eliminate_spaces(input,s);
+    		z=i;
             string t="\0";
-            t+=input[i];
-            //cout<<t<<endl;
-            if(register_map.find(t)!=register_map.end())
-            {
-            	result.rs=register_map[t];
-            	//cout<<result.rt<<endl;
-            }
-            i++;
-            j=eliminate_spaces(input,i);
-            t="\0";
-            t+=input[j];
+            t=get_string(input,t,z);
+            i=z;
             //cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
             	result.ra=register_map[t];
+            	//cout<<result.rt<<endl;
+            }
+            i++;
+             z=0;
+            j=eliminate_spaces(input,i);
+            z=j;
+            t="\0";
+             t=get_string(input,t,z);
+             j=z;
+            //cout<<t<<endl;
+            if(register_map.find(t)!=register_map.end())
+            {
+            	result.rs=register_map[t];
             	//cout<<result.ra<<endl;
             }
             j++;
+            z=0;
             i=eliminate_spaces(input,j);
+            z=i;
             t="\0";
-            t+=input[i];
+            t=get_string(input,t,z);
+            i=z;
            //cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
@@ -602,9 +899,12 @@ int i,j;
             	//cout<<result.rb<<endl;
             }
             i++;
+           z=0;
             j=eliminate_spaces(input,i);
+            z=j;
             t="\0";
-            t+=input[j];
+             t=get_string(input,t,z);
+             j=z;
             //cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
@@ -612,9 +912,12 @@ int i,j;
             	//cout<<result.ra<<endl;
             }
             j++;
+            z=0;
             i=eliminate_spaces(input,j);
+            z=i;
             t="\0";
-            t+=input[i];
+            t=get_string(input,t,z);
+            i=z;
            //cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
@@ -626,6 +929,7 @@ int i,j;
     		string fans4 = result.po + result.rs + result.ra + result.sh + result.mb + result.me;
     		cout << fans4 << endl;
     }
+    //b is wrong
 
     else if(format == "B")
     {
@@ -644,10 +948,12 @@ int i,j;
     		result.aa = "1";
     		result.lk = "0";
     	}
-
+            z=0;
     		i=eliminate_spaces(input,s);
+    		z=i;
             string t="\0";
-            t+=input[i];
+            t=get_string(input,t,z);
+            i=z;
             //cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
@@ -655,9 +961,12 @@ int i,j;
             	//cout<<result.rt<<endl;
             }
             i++;
+            z=0;
             j=eliminate_spaces(input,i);
+            z=j;
             t="\0";
-            t+=input[j];
+             t=get_string(input,t,z);
+             j=z;
             //cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
@@ -665,15 +974,31 @@ int i,j;
             	//cout<<result.ra<<endl;
             }
             j++;
+           z=0;
             i=eliminate_spaces(input,j);
+            z=i;
             t="\0";
-            t+=input[i];
+            t=get_string(input,t,z);
+            i=z;
            //cout<<t<<endl;
-            if(register_map.find(t)!=register_map.end())
+            //check from symbol table or literal table
+             if(symtab.find(t)!=symtab.end())
             {
-            	result.bd=register_map[t];
-            	//cout<<result.rb<<endl;
+                   result.bd=convert_dsi(symtab[t]);
             }
+            else if (littab.find(t)!=littab.end())
+            {
+            	/* code */
+            	result.bd=convert_dsi(littab[t]);
+            }
+            else
+            {
+            	result.bd=convert_ds(t);
+            	//cout<<result.rt<<endl;
+           }
+            	
+            	//cout<<result.rb<<endl;
+            
             i++;
             string fans5 = result.po + result.bo + result.bi + result.bd + result.aa + result.lk;
             cout << fans5 << endl;
@@ -687,38 +1012,46 @@ int i,j;
     	if(ins == "ld")
     	{
     		result.po = "111010";
-    		result.xo = "0";
+    		result.xo = "00";
     	}
 
     	else if(ins == "std")
     	{
     		result.po = "111110";
-    		result.xo = "0";
+    		result.xo = "00";
     	}
+    	    z=0;
     		i=eliminate_spaces(input,s);
+    		z=i;
             string t="\0";
-            t+=input[i];
-            //cout<<t<<endl;
+            t=get_string(input,t,z);
+            i=z;
+           // cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
             	result.rt=register_map[t];
             	//cout<<result.rt<<endl;
             }
             i++;
+            z=0;
             j=eliminate_spaces(input,i);
+            z=j;
             t="\0";
-            t+=input[j];
+             t=get_string(input,t,z);
+             j=z;
             //cout<<t<<endl;
-            if(register_map.find(t)!=register_map.end())
-            {
-            	result.ds=register_map[t];
+            
+            	result.ds=convert_ds(t);
             	//cout<<result.ra<<endl;
-            }
+            
             j++;
+            z=0;
             i=eliminate_spaces(input,j);
+            z=i;
             t="\0";
-            t+=input[i];
-           //cout<<t<<endl;
+            t=get_string(input,t,z);
+            i=z;
+          // cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
             	result.ra=register_map[t];
@@ -726,7 +1059,7 @@ int i,j;
             }
             i++;
             string fans6 = result.po + result.rt + result.ra + result.ds + result.xo;
-            cout << fans6 << endl;
+            //cout << fans6 << endl;
     }
 
     else if(format == "I")
@@ -736,7 +1069,7 @@ int i,j;
     	if(ins == "b")
     	{
     		result.po = "010010";
-    		result.aa = "";
+    		result.aa = "0";
     		result.lk = "0";
     	}
 
@@ -747,15 +1080,28 @@ int i,j;
     		result.lk = "1";
     	}
 
+    		 z=0;
     		i=eliminate_spaces(input,s);
+    		z=i;
             string t="\0";
-            t+=input[i];
+            t=get_string(input,t,z);
+            i=z;
             //cout<<t<<endl;
-            if(register_map.find(t)!=register_map.end())
+           //check symbol table or literal table
+            if(symtab.find(t)!=symtab.end())
             {
-            	result.li=register_map[t];
-            	//cout<<result.rt<<endl;
+                   result.li=convert_li(symtab[t]);
             }
+            else if (littab.find(t)!=littab.end())
+            {
+            	/* code */
+            	result.li=convert_li(littab[t]);
+            }
+            else
+            {
+            	result.li=convert_i_li(t);
+            	//cout<<result.rt<<endl;
+           }
             i++;
 
             string fans7 = result.po + result.li + result.aa + result.lk;
@@ -766,7 +1112,7 @@ int i,j;
 
 void transalate_pseudo(string ins,string act_ins,char input[],int s)
 {
-
+    //pseudo instructions remaining and output to be included in a file
 }
 
 void parse_file(FILE *fp,int n)
