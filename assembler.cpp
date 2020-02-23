@@ -565,7 +565,7 @@ int i,j;
             if(register_map.find(t)!=register_map.end())
             {
             	result.rt=register_map[t];
-            	//cout<<result.rt<<endl;
+           //cout<<result.rt<<endl;
             }
             i++;
             z=0;
@@ -578,7 +578,7 @@ int i,j;
             if(register_map.find(t)!=register_map.end())
             {
             	result.ra=register_map[t];
-            	//cout<<result.ra<<endl;
+         // 	cout<<result.ra<<endl;
             }
             j++;
             z=0;
@@ -587,11 +587,11 @@ int i,j;
              t="\0";
             t=get_string(input,t,z);
             i=z;
-          // cout<<t<<endl;
+        // cout<<t<<endl;
             if(register_map.find(t)!=register_map.end())
             {
             	result.rb=register_map[t];
-            	//cout<<result.rb<<endl;
+           //cout<<result.rb<<endl;
             }
             i++;
            string fans1=result.po+result.rt+result.ra+result.rb+result.oe+result.xo+result.rc;
@@ -1151,6 +1151,215 @@ int i,j;
 void transalate_pseudo(string ins,string act_ins,char input[],int s)
 {
     //pseudo instructions remaining and output to be included in a file
+    int i,j;
+      string res;
+        res="\0";
+          if(ins=="li"||ins=="lis")
+          {
+              // cout<<1<<endl; 
+             res+=act_ins;
+              for(i=s;input[i]!=',';i++)
+              {
+              	res+=input[i];
+              }
+              res+=", 0";
+              for(j=i;input[j];j++)
+              {
+              	res+=input[j];
+              }
+             // cout<<res<<endl;
+        string format=instructions[act_ins];
+           		//cout<<ins<<endl;
+        for(i=0;res[i]!=' ';i++);
+        	char res1[1000];
+        for(j=0;res[j];j++)
+        {
+             res1[j]=res[j];
+              
+         }
+
+          //cout<<act_ins<<endl;
+         // cout<<format<<endl;
+         // cout<<i<<endl;
+           		transalate(act_ins,format,res1,i);
+        
+             
+          }
+          else if (ins=="la")
+         {
+
+         	//cout<<1<<endl; 
+             res+=act_ins;
+              for(i=s;input[i]!=',';i++)
+              {
+              	res+=input[i];
+              }
+              res+=",";
+              int p=i;
+              for(j=i;input[j]!='(';j++);
+              	for(i=j+1;input[i]!=')';i++)
+              	{
+              		res+=input[i];
+              	}
+              	//cout<<res<<endl;
+              	//res+=",";
+              	for(i=p;input[i]!='(';i++)
+              	{
+              		res+=input[i];
+              	}
+             
+           //  cout<<res<<endl;
+        string format=instructions[act_ins];
+           		//cout<<ins<<endl;
+        for(i=0;res[i]!=' ';i++);
+        	char res1[1000];
+        for(j=0;res[j];j++)
+        {
+             res1[j]=res[j];
+              
+         }
+
+         // cout<<act_ins<<endl;
+          //cout<<format<<endl;
+         // cout<<i<<endl;
+           		transalate(act_ins,format,res1,i);
+          	
+          }
+
+
+          else if(ins=="mr")
+          {
+          	//cout<<1<<endl; 
+             res+=act_ins;
+             string res2="\0";
+             int count=0;
+              for(i=s;input[i];i++)
+              {
+
+              	if(input[i]=='#')
+              		break;
+              	res+=input[i];
+              	if(input[i]==',')
+              		count++;
+              	if(count==1 )
+              		res2+=input[i];
+
+              }
+              
+              
+              //res+=",";
+              res+=res2;
+             // cout<<res2<<endl;
+              //cout<<res<<endl;
+        string format=instructions[act_ins];
+           		//cout<<ins<<endl;
+        for(i=0;res[i]!=' ';i++);
+        	char res1[1000];
+        for(j=0;res[j];j++)
+        {
+             res1[j]=res[j];
+              
+         }
+
+         // cout<<act_ins<<endl;
+         //cout<<format<<endl;
+         // cout<<i<<endl;
+           		transalate(act_ins,format,res1,i);
+
+          }
+
+          else if(ins=="subi" || ins=="subis")
+          {
+          	cout<<1<<endl; 
+             res+=act_ins;
+             //string res2="\0";
+             int count=0,c=0;
+              for(i=s;input[i];i++)
+              {
+
+              	if(input[i]=='#')
+              		break;
+              	if(count==2 &&c==0)
+              	{
+
+              		res+='-';
+              		c++;
+              	}
+              	res+=input[i];
+              	if(input[i]==',')
+              		count++;
+              	
+
+              }
+              
+              
+              //res+=",";
+             // res+=res2;
+             // cout<<res2<<endl;
+              cout<<res<<endl;
+        string format=instructions[act_ins];
+           		//cout<<ins<<endl;
+        for(i=0;res[i]!=' ';i++);
+        	char res1[1000];
+        for(j=0;res[j];j++)
+        {
+             res1[j]=res[j];
+              
+         }
+
+          cout<<act_ins<<endl;
+         cout<<format<<endl;
+          cout<<i<<endl;
+           		transalate(act_ins,format,res1,i);
+          }
+
+          else if (ins=="sub")
+          {
+          	
+          	 // cout<<1<<endl; 
+             res+=act_ins;
+             string res2="\0";
+              for(i=s;input[i]!=',';i++)
+              {
+              	res+=input[i];
+              }
+              //cout<<res<<endl;
+              
+              for(j=i+1;input[j]!=',';j++)
+              {
+              	res2+=input[j];
+              }
+             //cout<<res2<<endl;
+              for(i=j;input[i];i++)
+              {
+              	
+              	if(input[i]=='#')
+              		break;
+              	res+=input[i];
+              }
+              res+=',';
+              res+=res2;
+             // cout<<res2<<endl;
+             cout<<res<<endl;
+        string format=instructions[act_ins];
+           		//cout<<ins<<endl;
+        for(i=0;res[i]!=' ';i++);
+        	char res1[1000];
+        int e=0;
+        for(j=0;res[j];j++)
+        {     
+             res1[j]=res[j];
+        // cout<<res1[j];
+         
+              
+         }
+
+         //cout<<act_ins<<endl;
+         // cout<<format<<endl;
+         //cout<<i<<endl;
+           		transalate(act_ins,format,res1,i);
+        
+          }
 }
 
 void parse_file(FILE *fp,int n)
