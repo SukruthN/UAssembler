@@ -527,6 +527,11 @@ int i,j;
             i++;
     	}
            string fans=result.po+result.rs+result.ra+result.rb+result.xo+result.rc;
+           for(i=0;fans[i];i++)
+           {
+           	putc(fans[i],Out);
+           }
+           putc('\n',Out);
          // cout<<fans<<endl;//result to be added to output file
 
     }
@@ -590,6 +595,11 @@ int i,j;
             }
             i++;
            string fans1=result.po+result.rt+result.ra+result.rb+result.oe+result.xo+result.rc;
+            for(i=0;fans1[i];i++)
+           {
+           	putc(fans1[i],Out);
+           }
+           putc('\n',Out);
            //cout<<fans1<<endl;//result to be added to output file
 
     }
@@ -646,8 +656,12 @@ int i,j;
             }
             i++;
             string fans2 = result.po + result.rs + result.ra + result.sh + result.xo + result.sh1 + result.rc;
-            cout << fans2 << endl;
-
+            //cout << fans2 << endl;
+             for(i=0;fans2[i];i++)
+           {
+           	putc(fans2[i],Out);
+           }
+            putc('\n',Out);
     }
 
     else if(format == "D")
@@ -847,8 +861,12 @@ int i,j;
 
         } 
             string fans3 = result.po + result.rt + result.ra + result.si;
-            cout << fans3 << endl;
-
+            //cout << fans3 << endl;
+             for(i=0;fans3[i];i++)
+           {
+           	putc(fans3[i],Out);
+           }
+         putc('\n',Out);
     }
 
     else if(format == "M")
@@ -927,7 +945,12 @@ int i,j;
             i++;
     		//rs,ra,sh,mb,me
     		string fans4 = result.po + result.rs + result.ra + result.sh + result.mb + result.me;
-    		cout << fans4 << endl;
+    		//cout << fans4 << endl;
+    		 for(i=0;fans4[i];i++)
+           {
+           	putc(fans4[i],Out);
+           }
+           putc('\n',Out);
     }
     //b is wrong
 
@@ -1001,7 +1024,12 @@ int i,j;
             
             i++;
             string fans5 = result.po + result.bo + result.bi + result.bd + result.aa + result.lk;
-            cout << fans5 << endl;
+            //cout << fans5 << endl;
+             for(i=0;fans5[i];i++)
+           {
+           	putc(fans5[i],Out);
+           }
+           putc('\n',Out);
     }
 
     else if(format == "DS")
@@ -1060,6 +1088,11 @@ int i,j;
             i++;
             string fans6 = result.po + result.rt + result.ra + result.ds + result.xo;
             //cout << fans6 << endl;
+             for(i=0;fans6[i];i++)
+           {
+           	putc(fans6[i],Out);
+           }
+           putc('\n',Out);
     }
 
     else if(format == "I")
@@ -1105,6 +1138,11 @@ int i,j;
             i++;
 
             string fans7 = result.po + result.li + result.aa + result.lk;
+             for(i=0;fans7[i];i++)
+           {
+           	putc(fans7[i],Out);
+           }
+           putc('\n',Out);
     }
       //do for other instruction types
     	// X, XO, XS, D, M, B, DS, I
@@ -1195,7 +1233,7 @@ void parse_file(FILE *fp,int n)
           		if(type=='l'||type=='i')
           countd+=4;
             }
-     // cout<<"countt="<<countt<<' '<<"countd="<<countd<<endl;
+     // cout<<"countt="<<countt<<' '<<"countd="<<countd<<endl;		
 
         parse_file(fp,1);
 
@@ -1254,7 +1292,13 @@ void parse_file(FILE *fp,int n)
            	}
            	else
            	{  //push this into  output file
-           		cout<<"Invalid instruction"<<endl;
+           		string error="Invalid instruction";
+           		for(i=0;error[i];i++)
+           		{
+           			putc(error[i],Out);
+
+           		}
+           		putc('\n',Out);
            	}
 
            }
