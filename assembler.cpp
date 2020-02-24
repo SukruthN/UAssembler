@@ -268,7 +268,7 @@ string get_string(char input[],string t,int s)
 
 }
 
-string convert_li(int n)
+string convert_li(int n,char t)
 {
 	string res;
 	res="\0";
@@ -276,10 +276,16 @@ string convert_li(int n)
 	 for (int i = 23; i >= 0; i--) 
 	 { 
         int k = n >> i; 
+        if(i==1&&t=='s')
+        res+='1' ;
+        else
+        {
         if (k & 1) 
             res+="1";
         else
             res+="0";
+         }
+
     } 
    // cout<<res<<endl;
     return res;
@@ -291,11 +297,13 @@ string convert_i_li(string d)
 	int n=stoi(d);
 	 for (int i = 23; i >= 0; i--) 
 	 { 
-        int k = n >> i; 
+        int k = n >> i;
+        
         if (k & 1) 
             res+="1";
         else
             res+="0";
+    
     } 
    // cout<<res<<endl;
     return res;
@@ -1123,12 +1131,12 @@ int i,j;
            //check symbol table or literal table
             if(symtab.find(t)!=symtab.end())
             {
-                   result.li=convert_li(symtab[t]);
+                   result.li=convert_li(symtab[t],'s');
             }
             else if (littab.find(t)!=littab.end())
             {
             	/* code */
-            	result.li=convert_li(littab[t]);
+            	result.li=convert_li(littab[t],'l');
             }
             else
             {
@@ -1439,8 +1447,39 @@ void parse_file(FILE *fp,int n)
               }
           else if(dir1==".data") 
           	{
-          		if(type=='l'||type=='i')
+          		if(type=='i')
           countd+=4;
+               else if (type=='l')
+               {
+               	string data_type="\0";
+               	for(i=0;input[i];i++)
+               	{
+               		if(input[i]=='.')
+               			break;
+               	}
+               	for(j=i+1;input[j];j++)
+               	{
+               		if(input[j]==' ')
+               			break;
+               		data_type+=input[j];
+
+               	}
+               //	cout<<data_type<<endl;
+               	if(data_type=="word")
+               		{
+               			countd+=4;
+               			//cout<<1<<endl;
+               		}
+               	else if(data_type=="doubleword")
+               		countd+=8;
+               	else if(data_type=="halfword")
+               		countd+=2;
+               	else if(data_type=="byte")
+               		countd+=1;
+               	else if(data_type=="asciiz")
+               		countd+=1;
+
+               }
             }
      // cout<<"countt="<<countt<<' '<<"countd="<<countd<<endl;		
 
